@@ -89,19 +89,27 @@ export default function ProductScreen(props) {
                   <li>
                     Seller{' '}
                     <h2>
-                      <Link to={`/seller/${product.seller._id}`}>
-                        {product.seller.seller.name}
-                      </Link>
+                      { 
+                        Array.isArray(product.seller) ?
+                        <Link to={`/seller/${product.seller._id}`}>
+                          {product.seller.seller.name}
+                        </Link>
+                        : null
+                       }
                     </h2>
-                    <Rating
-                      rating={product.seller.seller.rating}
-                      numReviews={product.seller.seller.numReviews}
-                    ></Rating>
+                    {
+                      Array.isArray(product.seller) ?
+                      <Rating
+                        rating={product.seller.seller.rating}
+                        numReviews={product.seller.seller.numReviews}
+                      ></Rating> 
+                      : null
+                    }
                   </li>
                   <li>
                     <div className="row">
                       <div>Price</div>
-                      <div className="price">${product.price}</div>
+                      {/* <div className="price">${product.price}</div> */}
                     </div>
                   </li>
                   <li>
