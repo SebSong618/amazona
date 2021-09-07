@@ -12,6 +12,7 @@ export default function ProductScreen(props) {
   const productId = props.match.params.id;
   const [qty, setQty] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
+
   const { loading, error, product } = productDetails;
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
@@ -28,17 +29,16 @@ export default function ProductScreen(props) {
 
   useEffect(() => {
     if (successReviewCreate) {
-      window.alert('Review Submitted Successfully');
       setRating('');
       setComment('');
       dispatch({ type: PRODUCT_REVIEW_CREATE_RESET });
     }
-    dispatch(detailsProduct(productId));
+    dispatch(detailsProduct(productId));    
   }, [dispatch, productId, successReviewCreate]);
   const addToCartHandler = () => {
     props.history.push(`/cart/${productId}?qty=${qty}`);
   };
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (comment && rating) {
       dispatch(
@@ -51,7 +51,7 @@ export default function ProductScreen(props) {
   return (
     <div>
       {loading ? (
-        <LoadingBox></LoadingBox>
+        <LoadingBox />
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
@@ -165,7 +165,7 @@ export default function ProductScreen(props) {
               <MessageBox>There is no review</MessageBox>
             )}
             <ul>
-              {product.reviews.map((review) => (
+              {product?.reviews.map((review) => (
                 <li key={review._id}>
                   <strong>{review.name}</strong>
                   <Rating rating={review.rating} caption=" "></Rating>
@@ -175,9 +175,14 @@ export default function ProductScreen(props) {
               ))}
               <li>
                 {userInfo ? (
-                  <form className="form" onSubmit={submitHandler}>
+                  <div className="form" /* onSubmit={submitHandler} */>
                     <div>
                       <h2>Write a customer review</h2>
+                        {successReviewCreate && (
+                          <MessageBox>
+                            Review submitted successfully
+                          </MessageBox>
+                        )}
                     </div>
                     <div>
                       <label htmlFor="rating">Rating</label>
@@ -204,7 +209,7 @@ export default function ProductScreen(props) {
                     </div>
                     <div>
                       <label />
-                      <button className="primary" type="submit">
+                      <button className="primary" onClick={submitHandler}>
                         Submit
                       </button>
                     </div>
@@ -216,7 +221,7 @@ export default function ProductScreen(props) {
                         </MessageBox>
                       )}
                     </div>
-                  </form>
+                  </div>
                 ) : (
                   <MessageBox>
                     Please <Link to="/signin">Sign In</Link> to write a review

@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import {
+  CART_ADD_ITEM_REQUEST,
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
@@ -8,6 +9,7 @@ import {
 } from '../constants/cartConstants';
 
 export const addToCart = (productId, qty) => async (dispatch, getState) => {
+  dispatch({type : CART_ADD_ITEM_REQUEST});
   const { data } = await Axios.get(`/api/products/${productId}`);
   const {
     cart: { cartItems },
@@ -18,6 +20,7 @@ export const addToCart = (productId, qty) => async (dispatch, getState) => {
       payload: `Can't Add To Cart. Buy only from ${cartItems[0].seller.seller.name} in this order`,
     });
   } else {
+   
     dispatch({
       type: CART_ADD_ITEM,
       payload: {

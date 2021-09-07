@@ -221,6 +221,9 @@ img.large {
 /* Alert */
 .loading {
   display: block !important;
+  width:100px;
+  height:100px;
+  margin:auto;
 }
 .success {
   color: #20a020;
